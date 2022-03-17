@@ -30,7 +30,7 @@ Sphinx = "^4.4.0"
 flake8 = "^4.0.1"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.black]
@@ -70,3 +70,9 @@ float_to_top = true
 python_version = "3.9"
 warn_return_any = true
 warn_unused_configs = true
+
+
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
+style = "semver"
