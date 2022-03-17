@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import contextlib
 from collections import Counter
 from itertools import product

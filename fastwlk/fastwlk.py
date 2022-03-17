@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from abc import ABCMeta
 from itertools import combinations, combinations_with_replacement, product
 from typing import Any, Iterable, List, Tuple, Union
