@@ -27,6 +27,7 @@ jupyter = "^1.0.0"
 build = "^0.7.0"
 coverage = "^6.3.2"
 Sphinx = "^4.4.0"
+flake8 = "^4.0.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
