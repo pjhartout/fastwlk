@@ -29,11 +29,11 @@ jobs:
         .
 
     - name: Build and publish fastwlk 📦 to Test PyPI
-      uses: JRubics/poetry-publish@v1.10
+      uses: JRubics/poetry-publish@v2
       with:
           python_version: "3.9"
           poetry_version: "==1.0.5" # (PIP version specifier syntax)
-          build_format: "sdist"
+          # build_format: "sdist"
           allow_poetry_pre_release: "yes"
           ignore_dev_requirements: "yes"
           pypi_token: ${{ secrets.TEST_PYPI_API_TOKEN }}
@@ -42,12 +42,12 @@ jobs:
 
 
     - name: Build and publish fastwlk 📦 to Test PyPI
-      uses: JRubics/poetry-publish@v1.10
+      uses: JRubics/poetry-publish@v2
       if: startsWith(github.ref, 'refs/tags')
       with:
           python_version: "3.9"
           poetry_version: "==1.0.5" # (PIP version specifier syntax)
-          build_format: "sdist"
+          # build_format: "sdist"
           allow_poetry_pre_release: "yes"
           ignore_dev_requirements: "yes"
           pypi_token: ${{ secrets.PYPI_API_TOKEN }}
