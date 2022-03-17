@@ -75,4 +75,4 @@ warn_unused_configs = true
 [tool.poetry-dynamic-versioning]
 enable = true
 vcs = "git"
-style = "semver"
+style = "pep440"
