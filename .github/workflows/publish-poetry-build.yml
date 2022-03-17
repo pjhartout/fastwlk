@@ -30,6 +30,7 @@ jobs:
     - name: Publish distribution 📦 to Test PyPI
       uses: pypa/gh-action-pypi-publish@master
       with:
+        user: pjhartout
         password: ${{ secrets.TEST_PYPI_API_TOKEN }}
         repository_url: https://test.pypi.org/legacy/
 
@@ -37,4 +38,5 @@ jobs:
       if: startsWith(github.ref, 'refs/tags')
       uses: pypa/gh-action-pypi-publish@master
       with:
+        user: pjhartout
         password: ${{ secrets.PYPI_API_TOKEN }}
