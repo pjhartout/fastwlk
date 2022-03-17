@@ -11,12 +11,11 @@ jobs:
     - uses: actions/checkout@master
 
     - name: Set up Python 3.9
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
         python-version: 3.9
 
     - name: Install Poetry
-      uses: actions/setup-python@v2
       run: |
           curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py -o ./get-poetry.py
           if [ "$INSTALL_METHOD" = "pip" ]; then pip install poetry==${POETRY_VER}; fi
