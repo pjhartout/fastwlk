@@ -8,9 +8,6 @@ from setuptools import find_packages, setup
 with open("README.rst") as readme_file:
     readme = readme_file.read()
 
-with open("HISTORY.rst") as history_file:
-    history = history_file.read()
-
 with open("requirements.txt") as f:
     requirements = f.read().splitlines()
 
@@ -33,7 +30,7 @@ setup(
     description="fastwlk is a Python package that implements a fast version of the Weisfeiler-Lehman kernel.",
     install_requires=requirements,
     license="BSD license",
-    long_description=readme + "\n\n" + history,
+    long_description=readme,
     include_package_data=True,
     keywords="fastwlk",
     name="fastwlk",
