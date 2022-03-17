@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import contextlib
 from collections import Counter
 from itertools import product
@@ -54,7 +55,7 @@ def flatten_lists(lists: list) -> list:
         _list = list(_list)
         if _list != []:
             result += _list
-        else:
+        else:  # pragma: no cover
             continue
     return result
 

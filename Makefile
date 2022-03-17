@@ -50,15 +50,12 @@ clean-test: ## remove test and coverage artifacts
 lint/flake8: ## check style with flake8
 	flake8 fastwlk tests
 lint/black: ## check style with black
-	black --check fastwlk tests
+	black fastwlk tests
 
-lint: lint/flake8 lint/black ## check style
+lint: lint/black lint/flake8  ## check style
 
 test: ## run tests quickly with the default Python
 	pytest
-
-test-all: ## run tests on every Python version with tox
-	tox
 
 coverage: ## check code coverage quickly with the default Python
 	coverage run --source fastwlk -m pytest
@@ -81,9 +78,10 @@ release: dist ## package and upload a release
 	twine upload dist/*
 
 dist: clean ## builds source and wheel package
-	python setup.py sdist
-	python setup.py bdist_wheel
+	poetry build
 	ls -l dist
 
 install: clean ## install the package to the active Python's site-packages
-	python setup.py install
+	poetry install
+
+test_all: clean test coverage docs dist install lint

@@ -34,9 +34,3 @@ repos:
     hooks:
       - id: isort
         name: isort (python)
-
-  - repo: https://github.com/kynan/nbstripout
-    rev: 0.4.0
-    hooks:
-      - id: nbstripout
-        files: ".ipynb"

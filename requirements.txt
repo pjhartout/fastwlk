@@ -1,4 +1,0 @@
-numpy >= 1.22.3
-joblib >= 1.1.0
-networkx >= 2.7.1
-tqdm >= 4.63.0

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from abc import ABCMeta
 from itertools import combinations, combinations_with_replacement, product
 from typing import Any, Iterable, List, Tuple, Union
@@ -17,17 +18,7 @@ from .utils.validation import check_wl_input
 1
 
 
-class Kernel(metaclass=ABCMeta):
-    """Defines skeleton of descriptor classes"""
-
-    def __init__(self):
-        pass
-
-    def compute_gram_matrix(self, X: Iterable, Y: Iterable = None) -> Iterable:
-        return X
-
-
-class WeisfeilerLehmanKernel(Kernel):
+class WeisfeilerLehmanKernel:
     """Weisfeiler-Lehmann kernel"""
 
     def __init__(
@@ -52,7 +43,9 @@ class WeisfeilerLehmanKernel(Kernel):
     def compute_gram_matrix(
         self, X: List[nx.Graph], Y: Union[List[nx.Graph], None] = None
     ) -> np.ndarray:
-        def parallel_dot_product(lst: Iterable) -> Iterable:
+        def parallel_dot_product(
+            lst: Iterable,
+        ) -> Iterable:  # pragma: no cover
             res = list()
             for x in lst:
                 res.append(
@@ -65,7 +58,7 @@ class WeisfeilerLehmanKernel(Kernel):
                 )
             return res
 
-        def dot_product(dicts: Tuple) -> int:
+        def dot_product(dicts: Tuple) -> int:  # pragma: no cover
 
             running_sum = 0
             # 0 * x = 0 so we only need to iterate over common keys
@@ -75,7 +68,7 @@ class WeisfeilerLehmanKernel(Kernel):
 
         def handle_hashes_single_threaded(
             X: Iterable[nx.Graph],
-        ) -> Iterable[nx.Graph]:
+        ) -> Iterable[nx.Graph]:  # pragma: no cover
             X_hashed = list()
             for g in X:
                 X_hashed.append(
@@ -86,9 +79,10 @@ class WeisfeilerLehmanKernel(Kernel):
             return X_hashed
 
         check_wl_input(X)
-        check_wl_input(Y)
+        if Y is not None:
+            check_wl_input(Y)
 
-        if Y == None:
+        if Y == None:  # pragma: no cover
             Y = X
 
         if Y == X and self.n_jobs is not None:
@@ -107,8 +101,8 @@ class WeisfeilerLehmanKernel(Kernel):
             Y_hashed = X_hashed
         elif X != Y and self.n_jobs is None:
             X_hashed = handle_hashes_single_threaded(X)
-            Y_hashed = X_hashed = handle_hashes_single_threaded(Y)
-        else:
+            Y_hashed = handle_hashes_single_threaded(Y)
+        elif X != Y and self.n_jobs is not None:
             X_hashed = distribute_function(
                 compute_wl_hashes,
                 X,
@@ -142,13 +136,6 @@ class WeisfeilerLehmanKernel(Kernel):
             iters_data = list(list(product(X_hashed, Y_hashed)))
             iters_idx = list(
                 product(range(len(X_hashed)), range(len(Y_hashed)))
-            )
-
-        if X != Y and not self.biased:
-            raise RuntimeWarning(
-                "Ignoring biased parameter. X_i is never "
-                "compared to itself when X != Y. Set biased=False to get rid "
-                "of this warning."
             )
 
         keys = generate_random_strings(10, len(flatten_lists(iters_data)))
