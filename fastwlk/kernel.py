@@ -18,17 +18,7 @@ from .utils.validation import check_wl_input
 1
 
 
-class Kernel(metaclass=ABCMeta):
-    """Defines skeleton of descriptor classes"""
-
-    def __init__(self):
-        pass
-
-    def compute_gram_matrix(self, X: Iterable, Y: Iterable = None) -> Iterable:
-        return X
-
-
-class WeisfeilerLehmanKernel(Kernel):
+class WeisfeilerLehmanKernel:
     """Weisfeiler-Lehmann kernel"""
 
     def __init__(
@@ -87,7 +77,8 @@ class WeisfeilerLehmanKernel(Kernel):
             return X_hashed
 
         check_wl_input(X)
-        check_wl_input(Y)
+        if Y is not None:
+            check_wl_input(Y)
 
         if Y == None:
             Y = X
@@ -109,7 +100,7 @@ class WeisfeilerLehmanKernel(Kernel):
         elif X != Y and self.n_jobs is None:
             X_hashed = handle_hashes_single_threaded(X)
             Y_hashed = X_hashed = handle_hashes_single_threaded(Y)
-        else:
+        elif X != Y and self.n_jobs is not None:
             X_hashed = distribute_function(
                 compute_wl_hashes,
                 X,
@@ -128,6 +119,8 @@ class WeisfeilerLehmanKernel(Kernel):
                 node_label=self.node_label,
                 n_iter=self.n_iter,
             )
+        else:
+            raise RuntimeError("Class not initialized properly.")
 
         # It's faster to process n_jobs lists than to have one list and
         # dispatch one item at a time.

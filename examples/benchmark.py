@@ -16,7 +16,7 @@ import tracemalloc
 from typing import Callable, Iterable
 
 import numpy as np
-from fastwlk.weisfeiler_lehman import WeisfeilerLehmanKernel
+from fastwlk.kernel import WeisfeilerLehmanKernel
 from grakel import WeisfeilerLehman, graph_from_networkx
 from pyprojroot import here
 from tqdm import tqdm
@@ -149,6 +149,7 @@ def main():
     print("Benchmarking Weisfeiler Lehman Kernel - Self-Similarity Test")
     print("## Grakel Implementation")
     KX_grakel = grakel_benchmark(graphs, graphs)
+
     print("## fastwlk Implementation")
     KX_fastwlk = fastwlk_benchmark(graphs, graphs)
     np.testing.assert_array_equal(KX_fastwlk, KX_grakel)
