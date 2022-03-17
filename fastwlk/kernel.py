@@ -43,7 +43,9 @@ class WeisfeilerLehmanKernel:
     def compute_gram_matrix(
         self, X: List[nx.Graph], Y: Union[List[nx.Graph], None] = None
     ) -> np.ndarray:
-        def parallel_dot_product(lst: Iterable) -> Iterable:
+        def parallel_dot_product(
+            lst: Iterable,
+        ) -> Iterable:  # pragma: no cover
             res = list()
             for x in lst:
                 res.append(
@@ -56,7 +58,7 @@ class WeisfeilerLehmanKernel:
                 )
             return res
 
-        def dot_product(dicts: Tuple) -> int:
+        def dot_product(dicts: Tuple) -> int:  # pragma: no cover
 
             running_sum = 0
             # 0 * x = 0 so we only need to iterate over common keys
@@ -66,7 +68,7 @@ class WeisfeilerLehmanKernel:
 
         def handle_hashes_single_threaded(
             X: Iterable[nx.Graph],
-        ) -> Iterable[nx.Graph]:
+        ) -> Iterable[nx.Graph]:  # pragma: no cover
             X_hashed = list()
             for g in X:
                 X_hashed.append(
@@ -80,7 +82,7 @@ class WeisfeilerLehmanKernel:
         if Y is not None:
             check_wl_input(Y)
 
-        if Y == None:
+        if Y == None:  # pragma: no cover
             Y = X
 
         if Y == X and self.n_jobs is not None:
@@ -99,7 +101,7 @@ class WeisfeilerLehmanKernel:
             Y_hashed = X_hashed
         elif X != Y and self.n_jobs is None:
             X_hashed = handle_hashes_single_threaded(X)
-            Y_hashed = X_hashed = handle_hashes_single_threaded(Y)
+            Y_hashed = handle_hashes_single_threaded(Y)
         elif X != Y and self.n_jobs is not None:
             X_hashed = distribute_function(
                 compute_wl_hashes,
@@ -119,8 +121,6 @@ class WeisfeilerLehmanKernel:
                 node_label=self.node_label,
                 n_iter=self.n_iter,
             )
-        else:
-            raise RuntimeError("Class not initialized properly.")
 
         # It's faster to process n_jobs lists than to have one list and
         # dispatch one item at a time.
@@ -136,13 +136,6 @@ class WeisfeilerLehmanKernel:
             iters_data = list(list(product(X_hashed, Y_hashed)))
             iters_idx = list(
                 product(range(len(X_hashed)), range(len(Y_hashed)))
-            )
-
-        if X != Y and not self.biased:
-            raise RuntimeWarning(
-                "Ignoring biased parameter. X_i is never "
-                "compared to itself when X != Y. Set biased=False to get rid "
-                "of this warning."
             )
 
         keys = generate_random_strings(10, len(flatten_lists(iters_data)))
