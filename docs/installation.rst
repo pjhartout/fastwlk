@@ -28,24 +28,14 @@ From sources
 
 The sources for FastWLK can be downloaded from the `Github repo`_.
 
-You can either clone the public repository:
+Clone the repository, install `poetry`_ and build the project:
 
 .. code-block:: console
 
-    $ git clone git://github.com/pjhartout/fastwlk
+   $ git clone git://github.com/pjhartout/fastwlk
+   $ poetry build
 
-Or download the `tarball`_:
-
-.. code-block:: console
-
-    $ curl -OJL https://github.com/pjhartout/fastwlk/tarball/master
-
-Once you have a copy of the source, you can install it with:
-
-.. code-block:: console
-
-    $ python setup.py install
 
 
 .. _Github repo: https://github.com/pjhartout/fastwlk
-.. _tarball: https://github.com/pjhartout/fastwlk/tarball/master
+.. _Github repo: https://python-poetry.org/
