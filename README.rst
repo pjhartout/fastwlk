@@ -6,9 +6,6 @@ FastWLK
 .. image:: https://img.shields.io/pypi/v/fastwlk.svg
         :target: https://pypi.python.org/pypi/fastwlk
 
-.. image:: https://img.shields.io/travis/pjhartout/fastwlk.svg
-        :target: https://travis-ci.com/pjhartout/fastwlk
-
 .. image:: https://readthedocs.org/projects/fastwlk/badge/?version=latest
         :target: https://fastwlk.readthedocs.io/en/latest/?version=latest
         :alt: Documentation Status
