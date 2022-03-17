@@ -21,10 +21,6 @@ jobs:
 
     - name: Install poetry dependencies
       run: >-
-        pip install poetry-dynamic-versioning
-
-    - name: Install poetry dependencies
-      run: >-
         poetry install --no-dev
 
     - name: Install pypa/build
