@@ -24,7 +24,6 @@ jobs:
           python ./get-poetry.py --version 1.1.6 --yes && source ~/.poetry/env
           pip install poetry-dynamic-versioning
           poetry install
-          make coverage
           make test
           poetry build
 
