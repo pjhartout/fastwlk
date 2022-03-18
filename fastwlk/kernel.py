@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from abc import ABCMeta
 from itertools import combinations, combinations_with_replacement, product
-from typing import Any, Iterable, List, Tuple, Union
+from typing import Any, Dict, Iterable, List, Tuple, Union
 
 import networkx as nx
 import numpy as np
@@ -43,9 +43,27 @@ class WeisfeilerLehmanKernel:
     def compute_gram_matrix(
         self, X: List[nx.Graph], Y: Union[List[nx.Graph], None] = None
     ) -> np.ndarray:
+        """Computes the Gram matrix of the Weisfeiler-Lehman kernel.
+
+        Args:
+            X (List[nx.Graph]): List of graphs to use in the kernel.
+            Y (Union[List[nx.Graph], None], optional): List of graphs to use in the kernel. Defaults to None.
+
+        Returns:
+            np.ndarray: _description_
+        """
+
         def parallel_dot_product(
             lst: Iterable,
         ) -> Iterable:  # pragma: no cover
+            """Computes the inner product of elements in lst.
+
+            Args:
+                lst (Iterable): Iterable to compute the inner product of.
+
+            Returns:
+                Iterable: computed inner products.
+            """
             res = list()
             for x in lst:
                 res.append(
@@ -59,7 +77,17 @@ class WeisfeilerLehmanKernel:
             return res
 
         def dot_product(dicts: Tuple) -> int:  # pragma: no cover
+            """Computes the inner product of two dictionaries using common
+            keys. This dramatically improves computation times when the number
+            of keys is large but the overlap between the two dictionaries in
+            the tuple is low.
 
+            Args:
+                dicts (Tuple): pair of dictionaries to compute the kernel from.
+
+            Returns:
+                int: dot product value of dicts
+            """
             running_sum = 0
             # 0 * x = 0 so we only need to iterate over common keys
             for key in set(dicts[0].keys()).intersection(dicts[1].keys()):
@@ -68,7 +96,15 @@ class WeisfeilerLehmanKernel:
 
         def handle_hashes_single_threaded(
             X: Iterable[nx.Graph],
-        ) -> Iterable[nx.Graph]:  # pragma: no cover
+        ) -> Iterable[Dict]:  # pragma: no cover
+            """Handles hashes when n_jobs = None on a single thread.
+
+            Args:
+                X (Iterable[nx.Graph]): Iterable of graphs to compute the hashes from
+
+            Returns:
+                Iterable[Dict]: hash histograms
+            """
             X_hashed = list()
             for g in X:
                 X_hashed.append(
@@ -79,6 +115,7 @@ class WeisfeilerLehmanKernel:
             return X_hashed
 
         check_wl_input(X)
+
         if Y is not None:
             check_wl_input(Y)
 
