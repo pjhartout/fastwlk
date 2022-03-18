@@ -13,7 +13,8 @@ FastWLK
 .. image:: https://codecov.io/gh/pjhartout/fastwlk/branch/main/graph/badge.svg?token=U054MJONED
       :target: https://codecov.io/gh/pjhartout/fastwlk
 
-`Documentation`_.
+.. |Website shields.io| image:: https://img.shields.io/website-up-down-green-red/http/shields.io.svg
+   :target: https://pjhartout.github.io/fastwlk/
 
 
 What does ``fastwlk`` do?
