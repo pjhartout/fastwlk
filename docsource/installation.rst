@@ -36,7 +36,9 @@ Clone the repository, install `poetry`_ and build the project:
    $ poetry install
    $ poetry build
 
+If you are wondering where ``setup.py`` is, it is no longer required for pip. See `PEP 518`_
 
 
 .. _Github repo: https://github.com/pjhartout/fastwlk
 .. _poetry: https://python-poetry.org/
+.. _pep 518: https://peps.python.org/pep-0518/
