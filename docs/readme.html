@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>FastWLK &#8212; FastWLK 0.2.3 documentation</title>
+    <title>FastWLK &#8212; FastWLK 0.2.5 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -41,10 +41,10 @@
 <a class="reference external image-reference" href="https://pjhartout.github.io/fastwlk/"><img alt="https://img.shields.io/website-up-down-green-red/http/shields.io.svg" src="https://img.shields.io/website-up-down-green-red/http/shields.io.svg" /></a>
 <section id="quick-links">
 <h2>Quick Links<a class="headerlink" href="#quick-links" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://pjhartout.github.io/fastwlk/">Documentation</a>
-<a class="reference external" href="https://pjhartout.github.io/fastwlk/installation.html">Installation</a>
-<a class="reference external" href="https://pjhartout.github.io/fastwlk/usage.html">Usage</a>
-<a class="reference external" href="https://pjhartout.github.io/fastwlk/contributing.html">Contributing</a></p>
+<p><a class="reference external" href="https://pjhartout.github.io/fastwlk/">Documentation</a></p>
+<p><a class="reference external" href="https://pjhartout.github.io/fastwlk/installation.html">Installation</a></p>
+<p><a class="reference external" href="https://pjhartout.github.io/fastwlk/usage.html">Usage</a></p>
+<p><a class="reference external" href="https://pjhartout.github.io/fastwlk/contributing.html">Contributing</a></p>
 </section>
 <section id="what-does-fastwlk-do">
 <h2>What does <code class="docutils literal notranslate"><span class="pre">fastwlk</span></code> do?<a class="headerlink" href="#what-does-fastwlk-do" title="Permalink to this headline">¶</a></h2>
@@ -58,10 +58,11 @@ each graph’s hash can be computed independently prior to computing the
 kernel.</p></li>
 <li><p>It parallelizes the computation of similarity of graphs in RKHS by computing
 batches of the inner products independently.</p></li>
-<li><p>On sparse graphs, lots of computations are spent processing positions/hashes
-that do not actually overlap between graph representations. As such, we
-manually loop over the overlapping keys, outperforming numpy dot
-product-based implementations.</p></li>
+<li><p>When comparing graphs, lots of computations are spent processing
+positions/hashes that do not actually overlap between Weisfeiler-Lehman
+histograms. As such, we manually loop over the overlapping keys,
+outperforming numpy dot product-based implementations on most graphs derived
+from proteins.</p></li>
 </ol>
 <p>This implementation works best when graphs have relatively few connections and
 are reasonably dissimilar from one another. If you are not sure the graphs you
@@ -72,14 +73,17 @@ with others out there.</p>
 <h2>How fast is <code class="docutils literal notranslate"><span class="pre">fastwlk</span></code>?<a class="headerlink" href="#how-fast-is-fastwlk" title="Permalink to this headline">¶</a></h2>
 <p>Running the benchmark script in <code class="docutils literal notranslate"><span class="pre">examples/benchmark.py</span></code> shows that for the
 graphs in <code class="docutils literal notranslate"><span class="pre">data/graphs.pkl</span></code>, we get an approximately 80% speed improvement
-over other implementations like <a class="reference external" href="https://github.com/ysig/GraKeL">grakel</a>.</p>
+over other implementations like <a class="reference external" href="https://github.com/ysig/GraKeL">grakel</a>. The example dataset contains 2-nn
+graphs extracted from 100 random proteins from the human proteome from the
+<a class="reference external" href="https://alphafold.ebi.ac.uk/download">AlphaFold EBI database</a>.</p>
 <p>To see how much faster this implementation is for your use case:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git clone git://github.com/pjhartout/fastwlk
 <span class="gp">$ </span>poetry install
 <span class="gp">$ </span>poetry run python examples/benchmark.py
 </pre></div>
 </div>
-<p>You will need to swap out the provided <code class="docutils literal notranslate"><span class="pre">graphs.pkl</span></code> with with an iterable of graphs of your own.</p>
+<p>You will need to swap out the provided <code class="docutils literal notranslate"><span class="pre">graphs.pkl</span></code> with a pickled iterable of
+graphs from the database you are interested in.</p>
 </section>
 </section>
 
