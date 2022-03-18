@@ -64,15 +64,17 @@ coverage: ## check code coverage quickly with the default Python
 	$(BROWSER) htmlcov/index.html
 
 docs: ## generate Sphinx HTML documentation, including API docs
-	rm -f docs/fastwlk.rst
-	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ fastwlk
-	$(MAKE) -C docs clean
-	$(MAKE) -C docs html
-	$(BROWSER) docs/_build/html/index.html
+
+	rm -f docsource/fastwlk.rst
+	rm -f docsource/modules.rst
+	sphinx-apidoc -o docsource/ fastwlk
+	$(MAKE) -C docsource clean
+	$(MAKE) -C docsource html
+	cp -r docsource/_build docs/
+	$(BROWSER) docsource/_build/html/index.html
 
 servedocs: docs ## compile the docs watching for changes
-	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
+	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docsource html' -R -D .
 
 release: dist ## package and upload a release
 	twine upload dist/*
