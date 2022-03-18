@@ -15,8 +15,6 @@ from .utils.functions import (
 )
 from .utils.validation import check_wl_input
 
-1
-
 
 class WeisfeilerLehmanKernel:
     """Weisfeiler-Lehmann kernel"""
