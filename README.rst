@@ -13,7 +13,7 @@ FastWLK
 .. image:: https://codecov.io/gh/pjhartout/fastwlk/branch/main/graph/badge.svg?token=U054MJONED
       :target: https://codecov.io/gh/pjhartout/fastwlk
 
-.. |Website shields.io| image:: https://img.shields.io/website-up-down-green-red/http/shields.io.svg
+.. image:: https://img.shields.io/website-up-down-green-red/http/shields.io.svg
    :target: https://pjhartout.github.io/fastwlk/
 
 
