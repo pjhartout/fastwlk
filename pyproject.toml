@@ -77,4 +77,4 @@ warn_unused_configs = true
 [tool.poetry-dynamic-versioning]
 enable = true
 vcs = "git"
-format = "v{base}"
+format = "{base}"
