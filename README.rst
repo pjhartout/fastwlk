@@ -44,10 +44,11 @@ compared to vanilla implementations:
 2. It parallelizes the computation of similarity of graphs in RKHS by computing
    batches of the inner products independently.
 
-3. On sparse graphs, lots of computations are spent processing positions/hashes
-   that do not actually overlap between graph representations. As such, we
-   manually loop over the overlapping keys, outperforming numpy dot
-   product-based implementations.
+3. When comparing graphs, lots of computations are spent processing
+   positions/hashes that do not actually overlap between Weisfeiler-Lehman
+   histograms. As such, we manually loop over the overlapping keys,
+   outperforming numpy dot product-based implementations on most graphs derived
+   from proteins.
 
 This implementation works best when graphs have relatively few connections and
 are reasonably dissimilar from one another. If you are not sure the graphs you
@@ -59,7 +60,9 @@ How fast is ``fastwlk``?
 
 Running the benchmark script in ``examples/benchmark.py`` shows that for the
 graphs in ``data/graphs.pkl``, we get an approximately 80% speed improvement
-over other implementations like `grakel`_.
+over other implementations like `grakel`_. The example dataset contains 2-nn
+graphs extracted from 100 random proteins from the human proteome from the
+`AlphaFold EBI database`_.
 
 To see how much faster this implementation is for your use case:
 
@@ -69,10 +72,12 @@ To see how much faster this implementation is for your use case:
    $ poetry install
    $ poetry run python examples/benchmark.py
 
-You will need to swap out the provided ``graphs.pkl`` with with an iterable of graphs of your own.
+You will need to swap out the provided ``graphs.pkl`` with a pickled iterable of
+graphs from the database you are interested in.
 
 .. _Documentation: https://pjhartout.github.io/fastwlk/
 .. _Installation: https://pjhartout.github.io/fastwlk/installation.html
 .. _Usage: https://pjhartout.github.io/fastwlk/usage.html
 .. _Contributing: https://pjhartout.github.io/fastwlk/contributing.html
 .. _grakel: https://github.com/ysig/GraKeL
+.. _AlphaFold EBI database: https://alphafold.ebi.ac.uk/download
