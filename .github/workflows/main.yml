@@ -28,7 +28,7 @@ jobs:
 
     - name: Test
       run: |
-          make test
+          poetry run pytest
 
 
     - name: Coverage
