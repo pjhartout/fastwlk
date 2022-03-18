@@ -15,8 +15,8 @@ If you are reporting a bug, please include:
 * Any details about your local setup that might be helpful in troubleshooting.
 * Detailed steps to reproduce the bug.
 
-Making a PR for bug fixes or enhancements
----------------
+Opening a Pull Request
+~~~~~~~~~~~~~~~~~~~~~~
 
 To start on a new feature
 
