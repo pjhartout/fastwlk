@@ -34,7 +34,7 @@
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span><span class="p">,</span> <span class="n">combinations_with_replacement</span><span class="p">,</span> <span class="n">product</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -76,9 +76,27 @@
 <div class="viewcode-block" id="WeisfeilerLehmanKernel.compute_gram_matrix"><a class="viewcode-back" href="../../fastwlk.html#fastwlk.kernel.WeisfeilerLehmanKernel.compute_gram_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">compute_gram_matrix</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">],</span> <span class="n">Y</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Computes the Gram matrix of the Weisfeiler-Lehman kernel.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            X (List[nx.Graph]): List of graphs to use in the kernel.</span>
+<span class="sd">            Y (Union[List[nx.Graph], None], optional): List of graphs to use in the kernel. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: _description_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">def</span> <span class="nf">parallel_dot_product</span><span class="p">(</span>
             <span class="n">lst</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span>
         <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+            <span class="sd">&quot;&quot;&quot;Computes the inner product of elements in lst.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                lst (Iterable): Iterable to compute the inner product of.</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                Iterable: computed inner products.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">res</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">lst</span><span class="p">:</span>
                 <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -92,7 +110,17 @@
             <span class="k">return</span> <span class="n">res</span>
 
         <span class="k">def</span> <span class="nf">dot_product</span><span class="p">(</span><span class="n">dicts</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+            <span class="sd">&quot;&quot;&quot;Computes the inner product of two dictionaries using common</span>
+<span class="sd">            keys. This dramatically improves computation times when the number</span>
+<span class="sd">            of keys is large but the overlap between the two dictionaries in</span>
+<span class="sd">            the tuple is low.</span>
 
+<span class="sd">            Args:</span>
+<span class="sd">                dicts (Tuple): pair of dictionaries to compute the kernel from.</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                int: dot product value of dicts</span>
+<span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">running_sum</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="c1"># 0 * x = 0 so we only need to iterate over common keys</span>
             <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">dicts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">dicts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
@@ -101,7 +129,15 @@
 
         <span class="k">def</span> <span class="nf">handle_hashes_single_threaded</span><span class="p">(</span>
             <span class="n">X</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">],</span>
-        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">]:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>  <span class="c1"># pragma: no cover</span>
+            <span class="sd">&quot;&quot;&quot;Handles hashes when n_jobs = None on a single thread.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                X (Iterable[nx.Graph]): Iterable of graphs to compute the hashes from</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                Iterable[Dict]: hash histograms</span>
+<span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">X_hashed</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">X</span><span class="p">:</span>
                 <span class="n">X_hashed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -112,6 +148,7 @@
             <span class="k">return</span> <span class="n">X_hashed</span>
 
         <span class="n">check_wl_input</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">Y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">check_wl_input</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
 
