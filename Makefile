@@ -70,7 +70,7 @@ docs: ## generate Sphinx HTML documentation, including API docs
 	sphinx-apidoc -o docsource/ fastwlk
 	$(MAKE) -C docsource clean
 	$(MAKE) -C docsource html
-	cp -r docsource/_build docs/
+	cp -r docsource/_build/html/ docs/
 	$(BROWSER) docsource/_build/html/index.html
 
 servedocs: docs ## compile the docs watching for changes
