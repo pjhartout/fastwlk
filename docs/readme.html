@@ -35,9 +35,12 @@
             
   <section id="fastwlk">
 <h1>FastWLK<a class="headerlink" href="#fastwlk" title="Permalink to this headline">¶</a></h1>
+<a class="reference external image-reference" href="https://github.com/pjhartout/fastwlk/"><img alt="https://github.com/pjhartout/fastwlk/actions/workflows/main.yml/badge.svg" src="https://github.com/pjhartout/fastwlk/actions/workflows/main.yml/badge.svg" /></a>
 <a class="reference external image-reference" href="https://pypi.python.org/pypi/fastwlk"><img alt="https://img.shields.io/pypi/v/fastwlk.svg" src="https://img.shields.io/pypi/v/fastwlk.svg" /></a>
 <a class="reference external image-reference" href="https://codecov.io/gh/pjhartout/fastwlk"><img alt="https://codecov.io/gh/pjhartout/fastwlk/branch/main/graph/badge.svg?token=U054MJONED" src="https://codecov.io/gh/pjhartout/fastwlk/branch/main/graph/badge.svg?token=U054MJONED" /></a>
-<a class="reference external image-reference" href="https://fastwlk.readthedocs.io/en/latest/?version=latest"><img alt="Documentation Status" src="https://readthedocs.org/projects/fastwlk/badge/?version=latest" /></a>
+<p><a class="reference external" href="https://pjhartout.github.io/fastwlk/">Documentation</a>.</p>
+<section id="what-does-fastwlk-do">
+<h2>What does <code class="docutils literal notranslate"><span class="pre">fastwlk</span></code> do?<a class="headerlink" href="#what-does-fastwlk-do" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">fastwlk</span></code> is a Python package that implements a fast version of the
 Weisfeiler-Lehman kernel. It manages to outperform current state-of-the-art
 implementations on sparse graphs by implementing a number of improvements
@@ -53,9 +56,23 @@ that do not actually overlap between graph representations. As such, we
 manually loop over the overlapping keys, outperforming numpy dot
 product-based implementations.</p></li>
 </ol>
-<p>The emphasis here being placed on <cite>sparse</cite>. If you are not sure the graphs you
+<p>This implementation works best when graphs have relatively few connections and
+are reasonably dissimilar from one another. If you are not sure the graphs you
 are using are either sparse or dissimilar enough, try to benchmark this package
 with others out there.</p>
+</section>
+<section id="how-fast-is-fastwlk">
+<h2>How fast is <code class="docutils literal notranslate"><span class="pre">fastwlk</span></code>?<a class="headerlink" href="#how-fast-is-fastwlk" title="Permalink to this headline">¶</a></h2>
+<p>Running the benchmark script in <code class="docutils literal notranslate"><span class="pre">examples/benchmark.py</span></code> shows that for the
+graphs in <code class="docutils literal notranslate"><span class="pre">data/graphs.pkl</span></code>, we get an approximately 80% speed improvement
+over other implementations like <a class="reference external" href="https://github.com/ysig/GraKeL">grakel</a>.</p>
+<p>To see how much faster this implementation is for your use case:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git clone git://github.com/pjhartout/fastwlk
+<span class="gp">$ </span>poetry install
+<span class="gp">$ </span>poetry run python examples/benchmark.py
+</pre></div>
+</div>
+</section>
 </section>
 
 
@@ -77,7 +94,11 @@ with others out there.</p>
 <h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">FastWLK</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">FastWLK</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-does-fastwlk-do">What does <code class="docutils literal notranslate"><span class="pre">fastwlk</span></code> do?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-fast-is-fastwlk">How fast is <code class="docutils literal notranslate"><span class="pre">fastwlk</span></code>?</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">fastwlk</a></li>

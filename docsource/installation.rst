@@ -33,6 +33,7 @@ Clone the repository, install `poetry`_ and build the project:
 .. code-block:: console
 
    $ git clone git://github.com/pjhartout/fastwlk
+   $ poetry install
    $ poetry build
 
 

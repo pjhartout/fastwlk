@@ -13,6 +13,11 @@ FastWLK
 .. image:: https://codecov.io/gh/pjhartout/fastwlk/branch/main/graph/badge.svg?token=U054MJONED
       :target: https://codecov.io/gh/pjhartout/fastwlk
 
+`Documentation`_.
+
+
+What does ``fastwlk`` do?
+-------------------------
 
 
 ``fastwlk`` is a Python package that implements a fast version of the
@@ -32,6 +37,26 @@ compared to vanilla implementations:
    manually loop over the overlapping keys, outperforming numpy dot
    product-based implementations.
 
-The emphasis here being placed on `sparse`. If you are not sure the graphs you
+This implementation works best when graphs have relatively few connections and
+are reasonably dissimilar from one another. If you are not sure the graphs you
 are using are either sparse or dissimilar enough, try to benchmark this package
 with others out there.
+
+How fast is ``fastwlk``?
+-------------------------
+
+Running the benchmark script in ``examples/benchmark.py`` shows that for the
+graphs in ``data/graphs.pkl``, we get an approximately 80% speed improvement
+over other implementations like `grakel`_.
+
+To see how much faster this implementation is for your use case:
+
+.. code-block:: console
+
+   $ git clone git://github.com/pjhartout/fastwlk
+   $ poetry install
+   $ poetry run python examples/benchmark.py
+
+
+.. _Documentation: https://pjhartout.github.io/fastwlk/
+.. _grakel: https://github.com/ysig/GraKeL

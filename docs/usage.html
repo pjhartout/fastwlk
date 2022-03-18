@@ -35,8 +35,25 @@
             
   <section id="usage">
 <h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
-<p>To use FastWLK in a project:</p>
+<p>Here’s an example of how to use <code class="docutils literal notranslate"><span class="pre">fastwlk</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">fastwlk</span>
+<span class="kn">from</span> <span class="nn">pyproject</span> <span class="kn">import</span> <span class="n">here</span>
+
+<span class="c1"># Let&#39;s first load some graphs from a pickle file</span>
+<span class="c1"># graphs.pkl contains 2-nn graphs extracted from</span>
+<span class="c1"># the AlphaFold human proteome database.</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">here</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;data/graphs.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">graphs</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+<span class="n">wl_kernel</span> <span class="o">=</span> <span class="n">WeisfeilerLehmanKernel</span><span class="p">(</span>
+    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">node_label</span><span class="o">=</span><span class="s2">&quot;residue&quot;</span><span class="p">,</span> <span class="n">biased</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="c1"># Returns self-similarity kernel matrix</span>
+<span class="n">KX</span> <span class="o">=</span> <span class="n">wl_kernel</span><span class="o">.</span><span class="n">compute_gram_matrix</span><span class="p">(</span><span class="n">graphs</span><span class="p">)</span>
+<span class="c1"># Returns the kernel between two graph distributions</span>
+<span class="n">KXY</span> <span class="o">=</span> <span class="n">wl_kernel</span><span class="o">.</span><span class="n">compute_gram_matrix</span><span class="p">(</span><span class="n">graphs</span><span class="p">[:</span><span class="mi">30</span><span class="p">],</span> <span class="n">graphs</span><span class="p">[:</span><span class="mi">30</span><span class="p">])</span>
 </pre></div>
 </div>
 </section>
