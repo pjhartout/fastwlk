@@ -44,6 +44,7 @@ clean-pyc: ## remove Python file artifacts
 clean-test: ## remove test and coverage artifacts
 	rm -fr .tox/
 	rm -f .coverage
+	rm -rf .coverage.xml
 	rm -fr htmlcov/
 	rm -fr .pytest_cache
 
@@ -64,13 +65,14 @@ coverage: ## check code coverage quickly with the default Python
 	$(BROWSER) htmlcov/index.html
 
 docs: ## generate Sphinx HTML documentation, including API docs
-
 	rm -f docsource/fastwlk.rst
 	rm -f docsource/modules.rst
+	rm -rf docs/
 	sphinx-apidoc -o docsource/ fastwlk
 	$(MAKE) -C docsource clean
 	$(MAKE) -C docsource html
 	cp -r docsource/_build/html/ docs/
+	touch docs/.nojekyll
 	$(BROWSER) docsource/_build/html/index.html
 
 servedocs: docs ## compile the docs watching for changes
