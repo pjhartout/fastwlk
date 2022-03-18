@@ -6,8 +6,8 @@ FastWLK
         :target: https://pypi.python.org/pypi/fastwlk
 
 
-.. image:: https://codecov.io/gh/pjhartout/fastwlk/settings/badge
-        :target: https://codecov.io/gh/pjhartout/fastwlk/settings/badge
+.. image:: https://codecov.io/gh/pjhartout/fastwlk/branch/main/graph/badge.svg?token=U054MJONED
+      :target: https://codecov.io/gh/pjhartout/fastwlk
 
 
 .. image:: https://readthedocs.org/projects/fastwlk/badge/?version=latest
