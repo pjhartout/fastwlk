@@ -30,12 +30,18 @@ jobs:
       run: |
           poetry run pytest
 
-
     - name: Coverage
+      run: |
+          poetry run coverage run --source fastwlk -m pytest
+          poetry run coverage report -m
+          poetry run coverage xml
+
+
+    - name: Upload Coverage
       uses: codecov/codecov-action@v2
       with:
           token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-          files: ./coverage1.xml,./coverage2.xml # optional
+          files: coverage.xml # optional
           flags: pytest # optional
           name: codecov-umbrella # optional
           fail_ci_if_error: true # optional (default = false)
