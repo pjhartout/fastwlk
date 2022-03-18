@@ -38,4 +38,4 @@ Clone the repository, install `poetry`_ and build the project:
 
 
 .. _Github repo: https://github.com/pjhartout/fastwlk
-.. _Github repo: https://python-poetry.org/
+.. _poetry: https://python-poetry.org/
