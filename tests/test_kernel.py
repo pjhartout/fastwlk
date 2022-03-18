@@ -9,13 +9,13 @@ from typing import Callable, Iterable
 import numpy as np
 import pytest
 from fastwlk.kernel import WeisfeilerLehmanKernel
+from fastwlk.utils.functions import compute_wl_hashes
 from pyprojroot import here
 
 N_JOBS = 6
 
 with open(here() / "data/graphs.pkl", "rb") as f:
     graphs = pickle.load(f)
-
 
 KX = np.array([[3608, 5062, 5009], [5062, 14532, 9726], [5009, 9726, 13649]])
 KXY = np.array(
@@ -35,8 +35,6 @@ test_validity_biased = [
 
 @pytest.mark.parametrize("X, Y, expected", test_validity_biased)
 def test_compute_gram_matrix_multithreaded(X, Y, expected):
-    """Sample pytest test function with the pytest fixture as an argument."""
-
     wl_kernel = WeisfeilerLehmanKernel(
         n_jobs=N_JOBS,
         n_iter=4,
@@ -50,8 +48,6 @@ def test_compute_gram_matrix_multithreaded(X, Y, expected):
 
 @pytest.mark.parametrize("X, Y, expected", test_validity_biased)
 def test_compute_gram_matrix_single_threaded(X, Y, expected):
-    """Sample pytest test function with the pytest fixture as an argument."""
-
     wl_kernel = WeisfeilerLehmanKernel(
         n_jobs=None,
         n_iter=4,
@@ -73,8 +69,6 @@ test_validity_unbiased = [
 
 @pytest.mark.parametrize("X, Y, expected", test_validity_unbiased)
 def test_compute_gram_matrix_unbiased(X, Y, expected):
-    """Sample pytest test function with the pytest fixture as an argument."""
-
     wl_kernel = WeisfeilerLehmanKernel(
         n_jobs=None,
         n_iter=4,
@@ -83,4 +77,24 @@ def test_compute_gram_matrix_unbiased(X, Y, expected):
         verbose=False,
     )
     K_fastwlk = wl_kernel.compute_gram_matrix(X, Y)
+    np.testing.assert_array_equal(K_fastwlk, expected)
+
+
+@pytest.mark.parametrize("X, Y, expected", test_validity_biased)
+def test_compute_gram_matrix_precomputed(X, Y, expected):
+    wl_kernel = WeisfeilerLehmanKernel(
+        n_jobs=None,
+        precomputed=True,
+        n_iter=4,
+        node_label="residue",
+        biased=True,
+        verbose=False,
+    )
+    hashes_X = [
+        compute_wl_hashes(graph, node_label="residue", n_iter=4) for graph in X
+    ]
+    hashes_Y = [
+        compute_wl_hashes(graph, node_label="residue", n_iter=4) for graph in Y
+    ]
+    K_fastwlk = wl_kernel.compute_gram_matrix(hashes_X, hashes_Y)
     np.testing.assert_array_equal(K_fastwlk, expected)

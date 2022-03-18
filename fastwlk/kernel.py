@@ -23,7 +23,8 @@ class WeisfeilerLehmanKernel:
 
     def __init__(
         self,
-        n_jobs: int,
+        n_jobs: int = 4,
+        precomputed: bool = False,
         n_iter: int = 3,
         node_label: str = "residue",
         normalize: bool = False,
@@ -39,6 +40,7 @@ class WeisfeilerLehmanKernel:
             self.n_jobs = None
         self.biased = biased
         self.verbose = verbose
+        self.precomputed = precomputed
 
     def compute_gram_matrix(
         self, X: List[nx.Graph], Y: Union[List[nx.Graph], None] = None
@@ -82,45 +84,52 @@ class WeisfeilerLehmanKernel:
         if Y is not None:
             check_wl_input(Y)
 
-        if Y == None:  # pragma: no cover
-            Y = X
+        if not self.precomputed:
+            if Y == None:  # pragma: no cover
+                Y = X
 
-        if Y == X and self.n_jobs is not None:
-            X_hashed = distribute_function(
-                compute_wl_hashes,
-                X,
-                self.n_jobs,
-                show_tqdm=self.verbose,
-                tqdm_label="Compute hashes of X",
-                node_label=self.node_label,
-                n_iter=self.n_iter,
-            )
-            Y_hashed = X_hashed
-        elif X == Y and self.n_jobs is None:
-            X_hashed = handle_hashes_single_threaded(X)
-            Y_hashed = X_hashed
-        elif X != Y and self.n_jobs is None:
-            X_hashed = handle_hashes_single_threaded(X)
-            Y_hashed = handle_hashes_single_threaded(Y)
-        elif X != Y and self.n_jobs is not None:
-            X_hashed = distribute_function(
-                compute_wl_hashes,
-                X,
-                n_jobs=self.n_jobs,
-                show_tqdm=self.verbose,
-                node_label=self.node_label,
-                tqdm_label="Compute hashes of X",
-                n_iter=self.n_iter,
-            )
-            Y_hashed = distribute_function(
-                compute_wl_hashes,
-                Y,
-                n_jobs=self.n_jobs,
-                show_tqdm=self.verbose,
-                tqdm_label="Compute hashes of Y",
-                node_label=self.node_label,
-                n_iter=self.n_iter,
-            )
+            if Y == X and self.n_jobs is not None:
+                X_hashed = distribute_function(
+                    compute_wl_hashes,
+                    X,
+                    self.n_jobs,
+                    show_tqdm=self.verbose,
+                    tqdm_label="Compute hashes of X",
+                    node_label=self.node_label,
+                    n_iter=self.n_iter,
+                )
+                Y_hashed = X_hashed
+            elif X == Y and self.n_jobs is None:
+                X_hashed = handle_hashes_single_threaded(X)
+                Y_hashed = X_hashed
+            elif X != Y and self.n_jobs is None:
+                X_hashed = handle_hashes_single_threaded(X)
+                Y_hashed = handle_hashes_single_threaded(Y)
+            elif X != Y and self.n_jobs is not None:
+                X_hashed = distribute_function(
+                    compute_wl_hashes,
+                    X,
+                    n_jobs=self.n_jobs,
+                    show_tqdm=self.verbose,
+                    node_label=self.node_label,
+                    tqdm_label="Compute hashes of X",
+                    n_iter=self.n_iter,
+                )
+                Y_hashed = distribute_function(
+                    compute_wl_hashes,
+                    Y,
+                    n_jobs=self.n_jobs,
+                    show_tqdm=self.verbose,
+                    tqdm_label="Compute hashes of Y",
+                    node_label=self.node_label,
+                    n_iter=self.n_iter,
+                )
+        else:
+            X_hashed = X
+            if X != Y and Y is not None:
+                Y_hashed = Y
+            else:
+                Y_hashed = X_hashed
 
         # It's faster to process n_jobs lists than to have one list and
         # dispatch one item at a time.
