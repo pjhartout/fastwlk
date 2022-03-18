@@ -14,6 +14,19 @@ from .exception import UniquenessError
 
 
 def generate_random_strings(string_length: int, n_strings: int) -> List[str]:
+    """Generates random strings
+
+    Args:
+        string_length (int): string length of the elements in the returned List.
+        n_strings (int): number of strings to return
+
+    Raises:
+        UniquenessError: if the number of unique strings cannot be returned
+            from the given string length.
+
+    Returns:
+        List[str]: unique strings
+    """
     unique_strings = list()
     for idx, item in enumerate(product(ascii_letters, repeat=string_length)):
         if idx == n_strings:
@@ -37,7 +50,20 @@ def distribute_function(
     show_tqdm: bool = True,
     **kwargs,
 ) -> Any:
-    """Simply distributes the execution of func across multiple cores to process X faster"""
+    """Wraps a function to execute it across multiple threads.
+    **kwargs are passed to the function to be parallelized.
+
+    Args:
+        func (Callable): function to be parallelized
+        X (Iterable): data to use in func.
+        n_jobs (int): number of threads to execute func
+        tqdm_label (str, optional): Label of the tqdm progress bar. Defaults to None.
+        total (int, optional): Total length of X if it cannot be deduced from X. Defaults to 1.
+        show_tqdm (bool, optional): Whether or not to show tqdm. Defaults to True.
+
+    Returns:
+        Any: result of the parallel execution of func on X.
+    """
     if total == 1:
         total = len(X)
     if show_tqdm:
@@ -48,8 +74,20 @@ def distribute_function(
     return Xt
 
 
-def flatten_lists(lists: list) -> list:
-    """Removes nested lists"""
+def flatten_lists(lists: List) -> List:
+    """Removes one level of nested list.
+    i.e.
+
+    flatten_lists([[1],[1,1,[1,1]]])
+    becomes
+    [1,1,1,[1,1]]
+
+    Args:
+        lists (list): list to remove one level of nestedness from.
+
+    Returns:
+        list: flattened list
+    """
     result = list()
     for _list in lists:
         _list = list(_list)
@@ -60,8 +98,16 @@ def flatten_lists(lists: list) -> list:
     return result
 
 
-def chunks(lst, n):
-    """returns lst divided into n chunks approx. the same size"""
+def chunks(lst: List, n: int) -> List:
+    """Divides lst into n roughly equally-sized chunks.
+
+    Args:
+        lst (List): list to divide.
+        n (int): number of chunks to divide lst
+
+    Returns:
+        List: lst divided into n roughly equally sized chunks.
+    """
     k, m = divmod(len(lst), n)
     return (
         lst[i * k + min(i, m) : (i + 1) * k + min(i + 1, m)] for i in range(n)
@@ -93,6 +139,18 @@ def tqdm_joblib(tqdm_object):
 
 
 def compute_wl_hashes(G: nx.Graph, node_label: str, n_iter: int) -> Dict:
+    """Computes Weisfeiler-Lehman hash histogram
+
+    Args:
+        G (nx.Graph): graph to compte the histogram of
+        node_label (str): node label to use as the starting node label of the
+            Weisfeiler-Lehman hashing process
+        n_iter (int): number of iterations of the Weisfeiler-Lehman algorithm
+            to run
+
+    Returns:
+        Dict: dictionary of the format {hash_value: n_nodes}.
+    """
     hash_iter_0 = dict(Counter(list(dict(G.nodes(node_label)).values())))
     hashes = dict(
         Counter(
