@@ -2,6 +2,10 @@
 FastWLK
 =============================
 
+.. image:: https://github.com/pjhartout/fastwlk/actions/workflows/main/badge.svg
+        :target: https://github.com/pjhartout/fastwlk/
+
+
 .. image:: https://img.shields.io/pypi/v/fastwlk.svg
         :target: https://pypi.python.org/pypi/fastwlk
 
