@@ -18,23 +18,17 @@ jobs:
       with:
         python-version: 3.9
 
-    - name: Setup Python
+    - name: Setup Python virtual environment, testing, coverage and build
       run: |
           curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py -o ./get-poetry.py
           python ./get-poetry.py --version 1.1.6 --yes && source ~/.poetry/env
           pip install poetry-dynamic-versioning
           poetry install
-
-
-    - name: Test
-      run: |
           poetry run pytest
-
-    - name: Coverage
-      run: |
           poetry run coverage run --source fastwlk -m pytest
           poetry run coverage report -m
           poetry run coverage xml
+          poetry build
 
 
     - name: Upload Coverage
@@ -46,10 +40,6 @@ jobs:
           name: codecov-umbrella # optional
           fail_ci_if_error: true # optional (default = false)
           verbose: true # optional (default = false)
-
-    - name: Build
-      run: |
-          poetry build
 
     - name: Publish distribution to Test PyPI
       uses: pypa/gh-action-pypi-publish@master
