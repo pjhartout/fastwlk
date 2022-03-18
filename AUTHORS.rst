@@ -2,12 +2,7 @@
 Credits
 =======
 
-Development Lead
+Contributors
 ----------------
 
 * Philip Hartout <philip.hartout@protonmail.com>
-
-Contributors
-------------
-
-None yet. Why not be the first?
