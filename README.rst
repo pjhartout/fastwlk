@@ -57,6 +57,7 @@ To see how much faster this implementation is for your use case:
    $ poetry install
    $ poetry run python examples/benchmark.py
 
+You will need to swap out the provided graphs.pkl with with an iterable of graphs of your own.
 
 .. _Documentation: https://pjhartout.github.io/fastwlk/
 .. _grakel: https://github.com/ysig/GraKeL
