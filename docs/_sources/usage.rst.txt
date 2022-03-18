@@ -22,3 +22,17 @@ Here's an example of how to use ``fastwlk``::
   KX = wl_kernel.compute_gram_matrix(graphs)
   # Returns the kernel between two graph distributions
   KXY = wl_kernel.compute_gram_matrix(graphs[:30], graphs[:30])
+
+You can also precompute the hashes prior to computing the kernel::
+
+  # If for whatever reason you are comparing the same graphs multiple times
+  # but with a different kernel config, you can precompute the hashes and set
+  # the precomputed flag to True.
+
+  from fastwlk.utils.functions import compute_wl_hashes
+  hashes = [compute_wl_hashes(graph, n_iter=4, node_label="residue") for graph in graphs]
+  wl_kernel = WeisfeilerLehmanKernel(
+  n_jobs=6, precomputed=True, n_iter=4, node_label="residue", biased=True, verbose=True,
+  )
+
+  wl_kernel.compute_gram_matrix(hashes)
