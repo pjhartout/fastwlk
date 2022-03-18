@@ -18,13 +18,34 @@ jobs:
       with:
         python-version: 3.9
 
-    - name: Build
+    - name: Set up virtual environment
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
       run: |
           curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py -o ./get-poetry.py
           python ./get-poetry.py --version 1.1.6 --yes && source ~/.poetry/env
           pip install poetry-dynamic-versioning
           poetry install
+
+
+    - name: Test
+      run: |
           make test
+
+
+    - name: Coverage
+      uses: codecov/codecov-action@v2
+      with:
+          token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+          files: ./coverage1.xml,./coverage2.xml # optional
+          flags: pytest # optional
+          name: codecov-umbrella # optional
+          fail_ci_if_error: true # optional (default = false)
+          verbose: true # optional (default = false)
+
+    - name: Build
+      run: |
           poetry build
 
     - name: Publish distribution to Test PyPI
