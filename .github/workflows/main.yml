@@ -7,20 +7,6 @@ on:
 
 
 jobs:
-  pre-commit:
-    name: Run precommit checks
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-      - run: |
-          pip install poetry
-          poetry install
-          poetry run pre-commit run --all-files --show-diff-on-failure
-
-
   build-n-publish:
     name: Publish package to PyPI and TestPyPI
     runs-on: ubuntu-18.04
