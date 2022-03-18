@@ -14,11 +14,6 @@ FastWLK
       :target: https://codecov.io/gh/pjhartout/fastwlk
 
 
-.. image:: https://readthedocs.org/projects/fastwlk/badge/?version=latest
-        :target: https://fastwlk.readthedocs.io/en/latest/?version=latest
-        :alt: Documentation Status
-
-
 
 ``fastwlk`` is a Python package that implements a fast version of the
 Weisfeiler-Lehman kernel. It manages to outperform current state-of-the-art
