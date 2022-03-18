@@ -20,8 +20,11 @@ FastWLK
 Quick Links
 -------------------------
 `Documentation`_
+
 `Installation`_
+
 `Usage`_
+
 `Contributing`_
 
 
