@@ -2,7 +2,7 @@
 FastWLK
 =============================
 
-.. image:: https://github.com/pjhartout/fastwlk/actions/workflows/main/badge.svg
+.. image:: https://github.com/pjhartout/fastwlk/actions/workflows/main.yml/badge.svg
         :target: https://github.com/pjhartout/fastwlk/
 
 
