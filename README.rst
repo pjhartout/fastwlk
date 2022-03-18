@@ -20,10 +20,14 @@ FastWLK
 Weisfeiler-Lehman kernel. It manages to outperform current state-of-the-art
 implementations on sparse graphs by implementing a number of improvements
 compared to vanilla implementations:
+
 1. It parallelizes the execution of Weisfeiler-Lehman hash computations since
-   each graph's hash can be computed independently prior to computing the kernel.
+   each graph's hash can be computed independently prior to computing the
+   kernel.
+
 2. It parallelizes the computation of similarity of graphs in RKHS by computing
    batches of the inner products independently.
+
 3. On sparse graphs, lots of computations are spent processing positions/hashes
    that do not actually overlap between graph representations. As such, we
    manually loop over the overlapping keys, outperforming numpy dot
