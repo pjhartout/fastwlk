@@ -4,10 +4,10 @@ fastwlk package
 Submodules
 ----------
 
-fastwlk.fastwlk module
-----------------------
+fastwlk.kernel module
+---------------------
 
-.. automodule:: fastwlk.fastwlk
+.. automodule:: fastwlk.kernel
    :members:
    :undoc-members:
    :show-inheritance:
