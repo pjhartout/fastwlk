@@ -5,6 +5,11 @@ FastWLK
 .. image:: https://img.shields.io/pypi/v/fastwlk.svg
         :target: https://pypi.python.org/pypi/fastwlk
 
+
+.. image:: https://codecov.io/gh/pjhartout/fastwlk/settings/badge
+        :target: https://codecov.io/gh/pjhartout/fastwlk/settings/badge
+
+
 .. image:: https://readthedocs.org/projects/fastwlk/badge/?version=latest
         :target: https://fastwlk.readthedocs.io/en/latest/?version=latest
         :alt: Documentation Status
