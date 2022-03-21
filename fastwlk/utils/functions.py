@@ -136,31 +136,3 @@ def tqdm_joblib(tqdm_object):
     finally:
         joblib.parallel.BatchCompletionCallBack = old_batch_callback
         tqdm_object.close()
-
-
-def compute_wl_hashes(G: nx.Graph, node_label: str, n_iter: int) -> Dict:
-    """Computes Weisfeiler-Lehman hash histogram
-
-    Args:
-        G (nx.Graph): graph to compte the histogram of
-        node_label (str): node label to use as the starting node label of the
-            Weisfeiler-Lehman hashing process
-        n_iter (int): number of iterations of the Weisfeiler-Lehman algorithm
-            to run
-
-    Returns:
-        Dict: dictionary of the format {hash_value: n_nodes}.
-    """
-    hash_iter_0 = dict(Counter(list(dict(G.nodes(node_label)).values())))
-    hashes = dict(
-        Counter(
-            flatten_lists(
-                list(
-                    nx.weisfeiler_lehman_subgraph_hashes(
-                        G, node_attr=node_label, iterations=n_iter,
-                    ).values()
-                )
-            )
-        )
-    )
-    return hashes | hash_iter_0
