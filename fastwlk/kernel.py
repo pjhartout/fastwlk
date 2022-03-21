@@ -152,6 +152,12 @@ class WeisfeilerLehmanKernel:
                 X_hashed.append(self.compute_wl_hashes(g))
             return X_hashed
 
+        if not self.biased and self.normalize:
+            self.biased = True
+            raise RuntimeWarning(
+                "Normalization is not supported when biased=False. Setting biased=True to prevent corrupted values."
+            )
+
         check_wl_input(X)
 
         if Y is not None:
