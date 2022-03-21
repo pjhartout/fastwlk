@@ -15,7 +15,7 @@ Here's an example of how to use ``fastwlk``::
       graphs = pickle.load(f)
 
   wl_kernel = WeisfeilerLehmanKernel(
-      n_jobs=6, n_iter=4, node_label="residue", biased=True, verbose=True
+      n_jobs=6, n_iter=4, node_label="residue", biased=True, verbose=True, normalize=True)
   )
 
   # Returns self-similarity kernel matrix
@@ -31,7 +31,7 @@ You can also precompute the hashes prior to computing the kernel::
 
   import fastwlk
   wl_kernel = WeisfeilerLehmanKernel(
-      n_jobs=6, n_iter=4, node_label="residue", precomputed=True, biased=True, verbose=True
+      n_jobs=6, n_iter=4, node_label="residue", precomputed=True, biased=True, verbose=True, normalize=True)
   )
   hashes = [wl_kernel.compute_wl_hashes(graph) for graph in graphs]
   wl_kernel.compute_gram_matrix(hashes)
