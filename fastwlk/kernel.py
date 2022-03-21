@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from abc import ABCMeta
+from collections import Counter
 from itertools import combinations, combinations_with_replacement, product
 from typing import Any, Dict, Iterable, List, Tuple, Union
 
@@ -8,7 +9,6 @@ import numpy as np
 
 from .utils.functions import (
     chunks,
-    compute_wl_hashes,
     distribute_function,
     flatten_lists,
     generate_random_strings,
@@ -39,6 +39,37 @@ class WeisfeilerLehmanKernel:
         self.biased = biased
         self.verbose = verbose
         self.precomputed = precomputed
+
+    def compute_wl_hashes(self, G: nx.Graph) -> Dict:
+        """Computes Weisfeiler-Lehman hash histogram
+
+        Args:
+            G (nx.Graph): graph to compte the histogram of
+            node_label (str): node label to use as the starting node label of the
+                Weisfeiler-Lehman hashing process
+            n_iter (int): number of iterations of the Weisfeiler-Lehman algorithm
+                to run
+
+        Returns:
+            Dict: dictionary of the format {hash_value: n_nodes}.
+        """
+        hash_iter_0 = dict(
+            Counter(list(dict(G.nodes(self.node_label)).values()))
+        )
+        hashes = dict(
+            Counter(
+                flatten_lists(
+                    list(
+                        nx.weisfeiler_lehman_subgraph_hashes(
+                            G,
+                            node_attr=self.node_label,
+                            iterations=self.n_iter,
+                        ).values()
+                    )
+                )
+            )
+        )
+        return hashes | hash_iter_0
 
     def compute_gram_matrix(
         self, X: List[nx.Graph], Y: Union[List[nx.Graph], None] = None
@@ -107,11 +138,7 @@ class WeisfeilerLehmanKernel:
             """
             X_hashed = list()
             for g in X:
-                X_hashed.append(
-                    compute_wl_hashes(
-                        g, node_label=self.node_label, n_iter=self.n_iter
-                    )
-                )
+                X_hashed.append(self.compute_wl_hashes(g))
             return X_hashed
 
         check_wl_input(X)
@@ -125,13 +152,11 @@ class WeisfeilerLehmanKernel:
 
             if Y == X and self.n_jobs is not None:
                 X_hashed = distribute_function(
-                    compute_wl_hashes,
+                    self.compute_wl_hashes,
                     X,
                     self.n_jobs,
                     show_tqdm=self.verbose,
                     tqdm_label="Compute hashes of X",
-                    node_label=self.node_label,
-                    n_iter=self.n_iter,
                 )
                 Y_hashed = X_hashed
             elif X == Y and self.n_jobs is None:
@@ -142,22 +167,18 @@ class WeisfeilerLehmanKernel:
                 Y_hashed = handle_hashes_single_threaded(Y)
             elif X != Y and self.n_jobs is not None:
                 X_hashed = distribute_function(
-                    compute_wl_hashes,
+                    self.compute_wl_hashes,
                     X,
                     n_jobs=self.n_jobs,
                     show_tqdm=self.verbose,
-                    node_label=self.node_label,
                     tqdm_label="Compute hashes of X",
-                    n_iter=self.n_iter,
                 )
                 Y_hashed = distribute_function(
-                    compute_wl_hashes,
+                    self.compute_wl_hashes,
                     Y,
                     n_jobs=self.n_jobs,
                     show_tqdm=self.verbose,
                     tqdm_label="Compute hashes of Y",
-                    node_label=self.node_label,
-                    n_iter=self.n_iter,
                 )
         else:
             X_hashed = X

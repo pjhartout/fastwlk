@@ -14,7 +14,6 @@ from typing import List
 import pytest
 from fastwlk.utils.functions import (
     chunks,
-    compute_wl_hashes,
     distribute_function,
     flatten_lists,
     generate_random_strings,
@@ -60,8 +59,7 @@ def test_flatten_lists(input, expected):
     assert list(flatten_lists(input)) == expected
 
 
-# test chuncks
-test_chunks = [
+test_chunks_data = [
     (
         [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         [[1, 2, 3], [4, 5, 6], [7, 8], [9, 10]],
@@ -70,15 +68,6 @@ test_chunks = [
 ]
 
 
-@pytest.mark.parametrize("input, expected", test_chunks)
+@pytest.mark.parametrize("input, expected", test_chunks_data)
 def test_chunks(input, expected):
     assert list(chunks(input, 4)) == expected
-
-
-test_compute_wl_hashes = [(graphs[1], encoding)]
-
-
-@pytest.mark.parametrize("X, expected", test_compute_wl_hashes)
-def test_compute_wl_hashes(X, expected):
-    hashes = compute_wl_hashes(graphs[1], node_label="residue", n_iter=2)
-    assert hashes == expected

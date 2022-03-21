@@ -29,10 +29,9 @@ You can also precompute the hashes prior to computing the kernel::
   # but with a different kernel config, you can precompute the hashes and set
   # the precomputed flag to True.
 
-  from fastwlk.utils.functions import compute_wl_hashes
-  hashes = [compute_wl_hashes(graph, n_iter=4, node_label="residue") for graph in graphs]
+  import fastwlk
   wl_kernel = WeisfeilerLehmanKernel(
-      n_jobs=6, precomputed=True, n_iter=4, node_label="residue", biased=True, verbose=True,
+      n_jobs=6, n_iter=4, node_label="residue", precomputed=True, biased=True, verbose=True
   )
-
+  hashes = [wl_kernel.compute_wl_hashes(graph) for graph in graphs]
   wl_kernel.compute_gram_matrix(hashes)
