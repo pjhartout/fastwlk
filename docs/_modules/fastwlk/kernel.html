@@ -106,6 +106,56 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">hashes</span> <span class="o">|</span> <span class="n">hash_iter_0</span></div>
 
+<div class="viewcode-block" id="WeisfeilerLehmanKernel.diagonal"><a class="viewcode-back" href="../../fastwlk.html#fastwlk.kernel.WeisfeilerLehmanKernel.diagonal">[docs]</a>    <span class="k">def</span> <span class="nf">diagonal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">K</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">X</span> <span class="o">==</span> <span class="n">Y</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">K</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Compute the diagonal of the self-similarity kernel matrix</span>
+            <span class="n">diag_X</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dot_product</span><span class="p">((</span><span class="n">elem</span><span class="p">,</span> <span class="n">elem</span><span class="p">))</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">X</span><span class="p">]</span>
+            <span class="n">diag_Y</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dot_product</span><span class="p">((</span><span class="n">elem</span><span class="p">,</span> <span class="n">elem</span><span class="p">))</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">Y</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">diag_X</span><span class="p">,</span> <span class="n">diag_Y</span></div>
+
+<div class="viewcode-block" id="WeisfeilerLehmanKernel.parallel_dot_product"><a class="viewcode-back" href="../../fastwlk.html#fastwlk.kernel.WeisfeilerLehmanKernel.parallel_dot_product">[docs]</a>    <span class="k">def</span> <span class="nf">parallel_dot_product</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">lst</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sd">&quot;&quot;&quot;Computes the inner product of elements in lst.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            lst (Iterable): Iterable to compute the inner product of.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Iterable: computed inner products.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">lst</span><span class="p">:</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]:</span> <span class="p">[</span>
+                        <span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">dot_product</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]),</span>
+                    <span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="WeisfeilerLehmanKernel.dot_product"><a class="viewcode-back" href="../../fastwlk.html#fastwlk.kernel.WeisfeilerLehmanKernel.dot_product">[docs]</a>    <span class="k">def</span> <span class="nf">dot_product</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dicts</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sd">&quot;&quot;&quot;Computes the inner product of two dictionaries using common</span>
+<span class="sd">        keys. This dramatically improves computation times when the number</span>
+<span class="sd">        of keys is large but the overlap between the two dictionaries in</span>
+<span class="sd">        the tuple is low.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dicts (Tuple): pair of dictionaries to compute the kernel from.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: dot product value of dicts</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">running_sum</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># 0 * x = 0 so we only need to iterate over common keys</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">dicts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">dicts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">running_sum</span> <span class="o">+=</span> <span class="n">dicts</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">*</span> <span class="n">dicts</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">running_sum</span></div>
+
 <div class="viewcode-block" id="WeisfeilerLehmanKernel.compute_gram_matrix"><a class="viewcode-back" href="../../fastwlk.html#fastwlk.kernel.WeisfeilerLehmanKernel.compute_gram_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">compute_gram_matrix</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">],</span> <span class="n">Y</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -118,47 +168,6 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            np.ndarray: _description_</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">def</span> <span class="nf">parallel_dot_product</span><span class="p">(</span>
-            <span class="n">lst</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span>
-        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-            <span class="sd">&quot;&quot;&quot;Computes the inner product of elements in lst.</span>
-
-<span class="sd">            Args:</span>
-<span class="sd">                lst (Iterable): Iterable to compute the inner product of.</span>
-
-<span class="sd">            Returns:</span>
-<span class="sd">                Iterable: computed inner products.</span>
-<span class="sd">            &quot;&quot;&quot;</span>
-            <span class="n">res</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">lst</span><span class="p">:</span>
-                <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="p">{</span>
-                        <span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]:</span> <span class="p">[</span>
-                            <span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-                            <span class="n">dot_product</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]),</span>
-                        <span class="p">]</span>
-                    <span class="p">}</span>
-                <span class="p">)</span>
-            <span class="k">return</span> <span class="n">res</span>
-
-        <span class="k">def</span> <span class="nf">dot_product</span><span class="p">(</span><span class="n">dicts</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-            <span class="sd">&quot;&quot;&quot;Computes the inner product of two dictionaries using common</span>
-<span class="sd">            keys. This dramatically improves computation times when the number</span>
-<span class="sd">            of keys is large but the overlap between the two dictionaries in</span>
-<span class="sd">            the tuple is low.</span>
-
-<span class="sd">            Args:</span>
-<span class="sd">                dicts (Tuple): pair of dictionaries to compute the kernel from.</span>
-
-<span class="sd">            Returns:</span>
-<span class="sd">                int: dot product value of dicts</span>
-<span class="sd">            &quot;&quot;&quot;</span>
-            <span class="n">running_sum</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="c1"># 0 * x = 0 so we only need to iterate over common keys</span>
-            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">dicts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">dicts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-                <span class="n">running_sum</span> <span class="o">+=</span> <span class="n">dicts</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">*</span> <span class="n">dicts</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
-            <span class="k">return</span> <span class="n">running_sum</span>
 
         <span class="k">def</span> <span class="nf">handle_hashes_single_threaded</span><span class="p">(</span>
             <span class="n">X</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">],</span>
@@ -247,7 +256,7 @@
             <span class="n">iters</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">chunks</span><span class="p">(</span><span class="n">iters</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,))</span>
             <span class="n">matrix_elems</span> <span class="o">=</span> <span class="n">flatten_lists</span><span class="p">(</span>
                 <span class="n">distribute_function</span><span class="p">(</span>
-                    <span class="n">parallel_dot_product</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">parallel_dot_product</span><span class="p">,</span>
                     <span class="n">iters</span><span class="p">,</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span>
                     <span class="n">show_tqdm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
@@ -255,7 +264,7 @@
                 <span class="p">)</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">matrix_elems</span> <span class="o">=</span> <span class="n">parallel_dot_product</span><span class="p">(</span><span class="n">iters</span><span class="p">)</span>
+            <span class="n">matrix_elems</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallel_dot_product</span><span class="p">(</span><span class="n">iters</span><span class="p">)</span>
 
         <span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">X_hashed</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">Y_hashed</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">matrix_elems</span><span class="p">:</span>
@@ -265,6 +274,11 @@
         <span class="k">if</span> <span class="n">X</span> <span class="o">==</span> <span class="n">Y</span><span class="p">:</span>
             <span class="c1"># mirror the matrix along diagonal</span>
             <span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">triu</span><span class="p">(</span><span class="n">K</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">triu</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span><span class="p">:</span>
+            <span class="c1"># From https://github.com/ysig/GraKeL/blob/33ffff18d99c13f8afc0438a5691cb1206b119fb/grakel/kernels/weisfeiler_lehman.py#L300</span>
+            <span class="n">X_diag</span><span class="p">,</span> <span class="n">Y_diag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="n">X_hashed</span><span class="p">,</span> <span class="n">Y_hashed</span><span class="p">,</span> <span class="n">K</span><span class="p">)</span>
+            <span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">X_diag</span><span class="p">,</span> <span class="n">Y_diag</span><span class="p">))))</span>
         <span class="k">return</span> <span class="n">K</span></div></div>
 </pre></div>
 

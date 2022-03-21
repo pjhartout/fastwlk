@@ -112,7 +112,7 @@ def networkx2grakel(X: Iterable) -> Iterable:
 def grakel_benchmark(X, Y):
     X = networkx2grakel(X)
     Y = networkx2grakel(Y)
-    wl_kernel = WeisfeilerLehman(n_jobs=N_JOBS, n_iter=3)
+    wl_kernel = WeisfeilerLehman(n_jobs=N_JOBS, n_iter=3, normalize=True)
     KXY = wl_kernel.fit(X).transform(Y).T
     return KXY
 
@@ -126,6 +126,7 @@ def fastwlk_benchmark(X, Y):
         node_label="residue",
         biased=True,
         verbose=False,
+        normalize=True,
     )
     KXY = wl_kernel.compute_gram_matrix(X, Y)
     return KXY
@@ -148,20 +149,22 @@ def main():
     print("====================================")
     print("Benchmarking Weisfeiler Lehman Kernel - Self-Similarity Test")
     print("## Grakel Implementation")
-    KX_grakel = grakel_benchmark(graphs, graphs)
+    KX_grakel = grakel_benchmark(graphs[:3], graphs[:3])
 
     print("## fastwlk Implementation")
-    KX_fastwlk = fastwlk_benchmark(graphs, graphs)
+    KX_fastwlk = fastwlk_benchmark(graphs[:3], graphs[:3])
     np.testing.assert_array_equal(KX_fastwlk, KX_grakel)
+    print(KX_fastwlk)
     print("====================================")
     print(
         "Benchmarking Weisfeiler Lehman Kernel - Distribution Pairwise Similarity Test"
     )
     print("## Grakel Implementation")
-    KXY_grakel = grakel_benchmark(graphs[:30], graphs[:30])
+    KXY_grakel = grakel_benchmark(graphs[:3], graphs[3:7])
     print("## fastwlk Implementation")
-    KXY_fastwlk = fastwlk_benchmark(graphs[:30], graphs[:30])
+    KXY_fastwlk = fastwlk_benchmark(graphs[:3], graphs[3:7])
     np.testing.assert_array_equal(KXY_fastwlk, KXY_grakel)
+    print(KXY_fastwlk)
     print("Done")
 
 

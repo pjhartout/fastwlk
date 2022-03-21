@@ -145,3 +145,38 @@ def test_grakel_equivalence(X, Y):
     KXY_fastwlk = wl_kernel_fastwlk.compute_gram_matrix(X, Y)
     np.testing.assert_array_equal(KXY_fastwlk, KXY_grakel)
     return KXY
+
+
+KX_norm = np.array(
+    [
+        [1.0, 0.73037069, 0.74368576],
+        [0.73037069, 1.0, 0.71130753],
+        [0.74368576, 0.71130753, 1.0],
+    ]
+)
+KXY_norm = np.array(
+    [
+        [0.79378634, 0.71006284, 0.74347089, 0.75475861],
+        [0.86111583, 0.77691583, 0.85014706, 0.79339745],
+        [0.78030479, 0.6632504, 0.72261873, 0.74512092],
+    ]
+)
+
+test_validity_normalized = [
+    (graphs[:3], graphs[:3], KX_norm),
+    (graphs[:3], graphs[3:7], KXY_norm),
+]
+
+
+@pytest.mark.parametrize("X, Y, expected", test_validity_normalized)
+def test_compute_gram_matrix_normalized(X, Y, expected):
+    wl_kernel = WeisfeilerLehmanKernel(
+        n_jobs=N_JOBS,
+        n_iter=3,
+        normalize=True,
+        node_label="residue",
+        biased=True,
+        verbose=False,
+    )
+    K_fastwlk = wl_kernel.compute_gram_matrix(X, Y)
+    np.testing.assert_array_almost_equal(K_fastwlk, expected, decimal=8)

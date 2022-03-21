@@ -73,6 +73,56 @@ class WeisfeilerLehmanKernel:
         )
         return hashes | hash_iter_0
 
+    def diagonal(self, X, Y, K):
+        if X == Y:
+            return np.diag(K), np.diag(K)
+        else:
+            # Compute the diagonal of the self-similarity kernel matrix
+            diag_X = [self.dot_product((elem, elem)) for elem in X]
+            diag_Y = [self.dot_product((elem, elem)) for elem in Y]
+            return diag_X, diag_Y
+
+    def parallel_dot_product(
+        self, lst: Iterable,
+    ) -> Iterable:  # pragma: no cover
+        """Computes the inner product of elements in lst.
+
+        Args:
+            lst (Iterable): Iterable to compute the inner product of.
+
+        Returns:
+            Iterable: computed inner products.
+        """
+        res = list()
+        for x in lst:
+            res.append(
+                {
+                    list(x.keys())[0]: [
+                        list(x.values())[0][0],
+                        self.dot_product(list(x.values())[0][1]),
+                    ]
+                }
+            )
+        return res
+
+    def dot_product(self, dicts: Tuple) -> int:  # pragma: no cover
+        """Computes the inner product of two dictionaries using common
+        keys. This dramatically improves computation times when the number
+        of keys is large but the overlap between the two dictionaries in
+        the tuple is low.
+
+        Args:
+            dicts (Tuple): pair of dictionaries to compute the kernel from.
+
+        Returns:
+            int: dot product value of dicts
+        """
+        running_sum = 0
+        # 0 * x = 0 so we only need to iterate over common keys
+        for key in set(dicts[0].keys()).intersection(dicts[1].keys()):
+            running_sum += dicts[0][key] * dicts[1][key]
+        return running_sum
+
     def compute_gram_matrix(
         self, X: List[nx.Graph], Y: Union[List[nx.Graph], None] = None
     ) -> np.ndarray:
@@ -85,47 +135,6 @@ class WeisfeilerLehmanKernel:
         Returns:
             np.ndarray: _description_
         """
-
-        def parallel_dot_product(
-            lst: Iterable,
-        ) -> Iterable:  # pragma: no cover
-            """Computes the inner product of elements in lst.
-
-            Args:
-                lst (Iterable): Iterable to compute the inner product of.
-
-            Returns:
-                Iterable: computed inner products.
-            """
-            res = list()
-            for x in lst:
-                res.append(
-                    {
-                        list(x.keys())[0]: [
-                            list(x.values())[0][0],
-                            dot_product(list(x.values())[0][1]),
-                        ]
-                    }
-                )
-            return res
-
-        def dot_product(dicts: Tuple) -> int:  # pragma: no cover
-            """Computes the inner product of two dictionaries using common
-            keys. This dramatically improves computation times when the number
-            of keys is large but the overlap between the two dictionaries in
-            the tuple is low.
-
-            Args:
-                dicts (Tuple): pair of dictionaries to compute the kernel from.
-
-            Returns:
-                int: dot product value of dicts
-            """
-            running_sum = 0
-            # 0 * x = 0 so we only need to iterate over common keys
-            for key in set(dicts[0].keys()).intersection(dicts[1].keys()):
-                running_sum += dicts[0][key] * dicts[1][key]
-            return running_sum
 
         def handle_hashes_single_threaded(
             X: Iterable[nx.Graph],
@@ -214,7 +223,7 @@ class WeisfeilerLehmanKernel:
             iters = list(chunks(iters, self.n_jobs,))
             matrix_elems = flatten_lists(
                 distribute_function(
-                    parallel_dot_product,
+                    self.parallel_dot_product,
                     iters,
                     self.n_jobs,
                     show_tqdm=self.verbose,
@@ -222,7 +231,7 @@ class WeisfeilerLehmanKernel:
                 )
             )
         else:
-            matrix_elems = parallel_dot_product(iters)
+            matrix_elems = self.parallel_dot_product(iters)
 
         K = np.zeros((len(X_hashed), len(Y_hashed)), dtype=int)
         for elem in matrix_elems:
@@ -232,4 +241,9 @@ class WeisfeilerLehmanKernel:
         if X == Y:
             # mirror the matrix along diagonal
             K = np.triu(K) + np.triu(K, 1).T
+
+        if self.normalize:
+            # From https://github.com/ysig/GraKeL/blob/33ffff18d99c13f8afc0438a5691cb1206b119fb/grakel/kernels/weisfeiler_lehman.py#L300
+            X_diag, Y_diag = self.diagonal(X_hashed, Y_hashed, K)
+            K = np.nan_to_num(np.divide(K, np.sqrt(np.outer(X_diag, Y_diag))))
         return K
