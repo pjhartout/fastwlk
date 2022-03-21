@@ -45,8 +45,10 @@ class WeisfeilerLehmanKernel:
 
         Args:
             G (nx.Graph): graph to compte the histogram of
+
             node_label (str): node label to use as the starting node label of the
                 Weisfeiler-Lehman hashing process
+
             n_iter (int): number of iterations of the Weisfeiler-Lehman algorithm
                 to run
 
