@@ -180,3 +180,31 @@ def test_compute_gram_matrix_normalized(X, Y, expected):
     )
     K_fastwlk = wl_kernel.compute_gram_matrix(X, Y)
     np.testing.assert_array_almost_equal(K_fastwlk, expected, decimal=8)
+
+
+KX_norm_unbiased = np.array(
+    [
+        [0.0, 0.73037069, 0.74368576],
+        [0.73037069, 0.0, 0.71130753],
+        [0.74368576, 0.71130753, 0.0],
+    ]
+)
+
+test_validity_normalized_unbiased = [
+    (graphs[:3], graphs[:3], KX_norm_unbiased),
+    (graphs[:3], graphs[3:7], KXY_norm),
+]
+
+
+@pytest.mark.parametrize("X, Y, expected", test_validity_normalized)
+def test_unbiased_normalized(X, Y, expected):
+    wl_kernel = WeisfeilerLehmanKernel(
+        n_jobs=N_JOBS,
+        n_iter=3,
+        normalize=True,
+        node_label="residue",
+        biased=False,
+        verbose=True,
+    )
+    K_fastwlk = wl_kernel.compute_gram_matrix(X, Y)
+    np.testing.assert_array_almost_equal(K_fastwlk, expected, decimal=8)

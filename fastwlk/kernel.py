@@ -154,9 +154,8 @@ class WeisfeilerLehmanKernel:
 
         if not self.biased and self.normalize:
             self.biased = True
-            raise RuntimeWarning(
-                "Normalization is not supported when biased=False. Setting biased=True to prevent corrupted values."
-            )
+            if self.verbose:
+                print("Setting biased=True to allow for normalization")
 
         check_wl_input(X)
 
