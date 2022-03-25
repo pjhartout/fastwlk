@@ -14,7 +14,14 @@ To install FastWLK, run this command in your terminal:
 
     $ pip install fastwlk
 
-This is the preferred method to install FastWLK, as it will always install the most recent stable release.
+This is the preferred method to install FastWLK, as it will always install the
+most recent stable release. If you are using poetry (which is used to develop
+``fastwlk``), you can also install it via:
+
+.. code-block:: console
+
+    $ poetry add fastwlk
+
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.
@@ -23,8 +30,8 @@ you through the process.
 .. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
 
 
-From sources
-------------
+From sources and for contributions
+------------------------------------
 
 The sources for FastWLK can be downloaded from the `Github repo`_.
 
