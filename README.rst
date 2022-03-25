@@ -47,13 +47,13 @@ compared to vanilla implementations:
 3. When comparing graphs, lots of computations are spent processing
    positions/hashes that do not actually overlap between Weisfeiler-Lehman
    histograms. As such, we manually loop over the overlapping keys,
-   outperforming numpy dot product-based implementations on most graphs derived
-   from proteins.
+   outperforming numpy dot product-based implementations on collections of
+   sparse graphs.
 
-This implementation works best when graphs have relatively few connections and
-are reasonably dissimilar from one another. If you are not sure the graphs you
-are using are either sparse or dissimilar enough, try to benchmark this package
-with others out there.
+This implementation works best when graphs have relatively few connections
+compared to the number of possible connections and are reasonably dissimilar
+from one another. If you are not sure the graphs you are using are either sparse
+or dissimilar enough, try to benchmark this package with others out there using `this script`_.
 
 How fast is ``fastwlk``?
 -------------------------
@@ -81,3 +81,4 @@ graphs from the database you are interested in.
 .. _Contributing: https://pjhartout.github.io/fastwlk/contributing.html
 .. _grakel: https://github.com/ysig/GraKeL
 .. _AlphaFold EBI database: https://alphafold.ebi.ac.uk/download
+.. _this script: https://github.com/pjhartout/fastwlk/blob/main/examples/benchmark.py

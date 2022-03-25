@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>FastWLK &#8212; FastWLK 0.2.11 documentation</title>
+    <title>FastWLK &#8212; FastWLK 0.2.12 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -61,13 +61,13 @@ batches of the inner products independently.</p></li>
 <li><p>When comparing graphs, lots of computations are spent processing
 positions/hashes that do not actually overlap between Weisfeiler-Lehman
 histograms. As such, we manually loop over the overlapping keys,
-outperforming numpy dot product-based implementations on most graphs derived
-from proteins.</p></li>
+outperforming numpy dot product-based implementations on collections of
+sparse graphs.</p></li>
 </ol>
-<p>This implementation works best when graphs have relatively few connections and
-are reasonably dissimilar from one another. If you are not sure the graphs you
-are using are either sparse or dissimilar enough, try to benchmark this package
-with others out there.</p>
+<p>This implementation works best when graphs have relatively few connections
+compared to the number of possible connections and are reasonably dissimilar
+from one another. If you are not sure the graphs you are using are either sparse
+or dissimilar enough, try to benchmark this package with others out there using <a class="reference external" href="https://github.com/pjhartout/fastwlk/blob/main/examples/benchmark.py">this script</a>.</p>
 </section>
 <section id="how-fast-is-fastwlk">
 <h2>How fast is <code class="docutils literal notranslate"><span class="pre">fastwlk</span></code>?<a class="headerlink" href="#how-fast-is-fastwlk" title="Permalink to this headline">¶</a></h2>
