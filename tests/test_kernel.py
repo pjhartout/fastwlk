@@ -14,6 +14,7 @@ from grakel import WeisfeilerLehman, graph_from_networkx
 from pyprojroot import here
 
 N_JOBS = 6
+default_eigvalue_precision = float("-1e-5")
 
 with open(here() / "data/graphs.pkl", "rb") as f:
     graphs = pickle.load(f)
@@ -208,3 +209,23 @@ def test_unbiased_normalized(X, Y, expected):
     )
     K_fastwlk = wl_kernel.compute_gram_matrix(X, Y)
     np.testing.assert_array_almost_equal(K_fastwlk, expected, decimal=8)
+
+
+test_positive_eig_data = [
+    (graphs),
+]
+
+
+@pytest.mark.parametrize("X", test_positive_eig_data)
+def test_positive_eig(X):
+    wl_kernel = WeisfeilerLehmanKernel(
+        n_jobs=N_JOBS,
+        n_iter=3,
+        normalize=True,
+        node_label="residue",
+        biased=False,
+        verbose=True,
+    )
+    K = wl_kernel.compute_gram_matrix(X)
+    min_eig = np.real(np.min(np.linalg.eig(K)[0]))
+    np.testing.assert_array_less(default_eigvalue_precision, min_eig)
