@@ -128,20 +128,11 @@ def fastwlk_benchmark(X, Y):
         verbose=False,
         normalize=True,
     )
-    KXY = wl_kernel.compute_gram_matrix(X, Y)
+    KXY = wl_kernel.compute_matrix(X, Y)
     return KXY
 
 
 def main():
-    """Description
-
-    Args:
-        input_shape (type): description
-        num_classes (type): description
-
-    Returns:
-        type: description
-    """
     with open(here() / "data/graphs.pkl", "rb") as f:
         graphs = pickle.load(f)
 
@@ -149,22 +140,19 @@ def main():
     print("====================================")
     print("Benchmarking Weisfeiler Lehman Kernel - Self-Similarity Test")
     print("## Grakel Implementation")
-    KX_grakel = grakel_benchmark(graphs[:3], graphs[:3])
+    KX_grakel = grakel_benchmark(graphs, graphs)
 
     print("## fastwlk Implementation")
-    KX_fastwlk = fastwlk_benchmark(graphs[:3], graphs[:3])
+    KX_fastwlk = fastwlk_benchmark(graphs, graphs)
     np.testing.assert_array_equal(KX_fastwlk, KX_grakel)
     print(KX_fastwlk)
     print("====================================")
-    print(
-        "Benchmarking Weisfeiler Lehman Kernel - Distribution Pairwise Similarity Test"
-    )
+    print("Benchmarking Weisfeiler Lehman Kernel - Similarity Test")
     print("## Grakel Implementation")
-    KXY_grakel = grakel_benchmark(graphs[:3], graphs[3:7])
+    KXY_grakel = grakel_benchmark(graphs[:50], graphs[50:])
     print("## fastwlk Implementation")
-    KXY_fastwlk = fastwlk_benchmark(graphs[:3], graphs[3:7])
+    KXY_fastwlk = fastwlk_benchmark(graphs[:50], graphs[50:])
     np.testing.assert_array_equal(KXY_fastwlk, KXY_grakel)
-    print(KXY_fastwlk)
     print("Done")
 
 

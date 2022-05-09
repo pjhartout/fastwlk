@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fastwlk"
-version = "0.2.13"
+version = "0.2.14"
 description = "fastwlk is a Python package that implements a fast version of the Weisfeiler-Lehman kernel."
 authors = ["Philip Hartout <philip.hartout@protonmail.com>"]
 license = "BSD-3 Clause License"
