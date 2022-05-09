@@ -5,7 +5,7 @@
 
 import json
 import pickle
-from typing import Callable, Iterable
+from typing import Iterable
 
 import numpy as np
 import pytest
