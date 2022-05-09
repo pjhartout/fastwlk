@@ -1,4 +1,13 @@
 # -*- coding: utf-8 -*-
+
+"""kernel.py
+
+This is the main module implementing fastwlk. It contains the Weisfeiler-Lehman
+kernel version working fastest on sparse graphs.
+
+"""
+
+
 from abc import ABCMeta
 from collections import Counter
 from itertools import combinations, combinations_with_replacement, product
