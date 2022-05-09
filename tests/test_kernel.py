@@ -40,7 +40,7 @@ test_validity_biased = [
 
 
 @pytest.mark.parametrize("X, Y, expected", test_validity_biased)
-def test_compute_gram_matrix_multithreaded(X, Y, expected):
+def test_compute_matrix_multithreaded(X, Y, expected):
     wl_kernel = WeisfeilerLehmanKernel(
         n_jobs=N_JOBS,
         n_iter=4,
@@ -48,12 +48,12 @@ def test_compute_gram_matrix_multithreaded(X, Y, expected):
         biased=True,
         verbose=False,
     )
-    K_fastwlk = wl_kernel.compute_gram_matrix(X, Y)
+    K_fastwlk = wl_kernel.compute_matrix(X, Y)
     np.testing.assert_array_equal(K_fastwlk, expected)
 
 
 @pytest.mark.parametrize("X, Y, expected", test_validity_biased)
-def test_compute_gram_matrix_single_threaded(X, Y, expected):
+def test_compute_matrix_single_threaded(X, Y, expected):
     wl_kernel = WeisfeilerLehmanKernel(
         n_jobs=None,
         n_iter=4,
@@ -61,7 +61,7 @@ def test_compute_gram_matrix_single_threaded(X, Y, expected):
         biased=True,
         verbose=False,
     )
-    K_fastwlk = wl_kernel.compute_gram_matrix(X, Y)
+    K_fastwlk = wl_kernel.compute_matrix(X, Y)
     np.testing.assert_array_equal(K_fastwlk, expected)
 
 
@@ -74,7 +74,7 @@ test_validity_unbiased = [
 
 
 @pytest.mark.parametrize("X, Y, expected", test_validity_unbiased)
-def test_compute_gram_matrix_unbiased(X, Y, expected):
+def test_compute_matrix_unbiased(X, Y, expected):
     wl_kernel = WeisfeilerLehmanKernel(
         n_jobs=None,
         n_iter=4,
@@ -82,12 +82,12 @@ def test_compute_gram_matrix_unbiased(X, Y, expected):
         biased=False,
         verbose=False,
     )
-    K_fastwlk = wl_kernel.compute_gram_matrix(X, Y)
+    K_fastwlk = wl_kernel.compute_matrix(X, Y)
     np.testing.assert_array_equal(K_fastwlk, expected)
 
 
 @pytest.mark.parametrize("X, Y, expected", test_validity_biased)
-def test_compute_gram_matrix_precomputed(X, Y, expected):
+def test_compute_matrix_precomputed(X, Y, expected):
     wl_kernel = WeisfeilerLehmanKernel(
         n_jobs=None,
         precomputed=True,
@@ -98,7 +98,7 @@ def test_compute_gram_matrix_precomputed(X, Y, expected):
     )
     hashes_X = [wl_kernel.compute_wl_hashes(graph) for graph in X]
     hashes_Y = [wl_kernel.compute_wl_hashes(graph) for graph in Y]
-    K_fastwlk = wl_kernel.compute_gram_matrix(hashes_X, hashes_Y)
+    K_fastwlk = wl_kernel.compute_matrix(hashes_X, hashes_Y)
     np.testing.assert_array_equal(K_fastwlk, expected)
 
 
@@ -143,7 +143,7 @@ def test_grakel_equivalence(X, Y):
         biased=True,
         verbose=False,
     )
-    KXY_fastwlk = wl_kernel_fastwlk.compute_gram_matrix(X, Y)
+    KXY_fastwlk = wl_kernel_fastwlk.compute_matrix(X, Y)
     np.testing.assert_array_equal(KXY_fastwlk, KXY_grakel)
     return KXY
 
@@ -170,7 +170,7 @@ test_validity_normalized = [
 
 
 @pytest.mark.parametrize("X, Y, expected", test_validity_normalized)
-def test_compute_gram_matrix_normalized(X, Y, expected):
+def test_compute_matrix_normalized(X, Y, expected):
     wl_kernel = WeisfeilerLehmanKernel(
         n_jobs=N_JOBS,
         n_iter=3,
@@ -179,7 +179,7 @@ def test_compute_gram_matrix_normalized(X, Y, expected):
         biased=True,
         verbose=False,
     )
-    K_fastwlk = wl_kernel.compute_gram_matrix(X, Y)
+    K_fastwlk = wl_kernel.compute_matrix(X, Y)
     np.testing.assert_array_almost_equal(K_fastwlk, expected, decimal=8)
 
 
@@ -207,7 +207,7 @@ def test_unbiased_normalized(X, Y, expected):
         biased=False,
         verbose=True,
     )
-    K_fastwlk = wl_kernel.compute_gram_matrix(X, Y)
+    K_fastwlk = wl_kernel.compute_matrix(X, Y)
     np.testing.assert_array_almost_equal(K_fastwlk, expected, decimal=8)
 
 
@@ -226,6 +226,94 @@ def test_positive_eig(X):
         biased=False,
         verbose=True,
     )
-    K = wl_kernel.compute_gram_matrix(X)
+    K = wl_kernel.compute_matrix(X)
     min_eig = np.real(np.min(np.linalg.eig(K)[0]))
     np.testing.assert_array_less(default_eigvalue_precision, min_eig)
+
+
+KXY_norm_gram = np.array(
+    [
+        [
+            1.0,
+            0.73037069,
+            0.74368576,
+            0.79378634,
+            0.71006284,
+            0.74347089,
+            0.75475861,
+        ],
+        [
+            0.73037069,
+            1.0,
+            0.71130753,
+            0.86111583,
+            0.77691583,
+            0.85014706,
+            0.79339745,
+        ],
+        [
+            0.74368576,
+            0.71130753,
+            1.0,
+            0.78030479,
+            0.6632504,
+            0.72261873,
+            0.74512092,
+        ],
+        [
+            0.79378634,
+            0.86111583,
+            0.78030479,
+            1.0,
+            0.84933868,
+            0.89514908,
+            0.86589011,
+        ],
+        [
+            0.71006284,
+            0.77691583,
+            0.6632504,
+            0.84933868,
+            1.0,
+            0.86015441,
+            0.84185343,
+        ],
+        [
+            0.74347089,
+            0.85014706,
+            0.72261873,
+            0.89514908,
+            0.86015441,
+            1.0,
+            0.85020836,
+        ],
+        [
+            0.75475861,
+            0.79339745,
+            0.74512092,
+            0.86589011,
+            0.84185343,
+            0.85020836,
+            1.0,
+        ],
+    ]
+)
+
+test_data_gram = [
+    (graphs[:3], graphs[:3], KX_norm),
+    (graphs[:3], graphs[3:7], KXY_norm_gram),
+]
+
+
+@pytest.mark.parametrize("X, Y, expected", test_data_gram)
+def test_compute_gram_matrix_normalized(X, Y, expected):
+    wl_kernel = WeisfeilerLehmanKernel(
+        n_jobs=N_JOBS,
+        n_iter=3,
+        node_label="residue",
+        normalize=True,
+        biased=True,
+        verbose=False,
+    )
+    K_fastwlk = wl_kernel.compute_gram_matrix(X, Y)
+    np.testing.assert_array_almost_equal(K_fastwlk, expected, decimal=8)

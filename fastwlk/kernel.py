@@ -132,7 +132,7 @@ class WeisfeilerLehmanKernel:
             running_sum += dicts[0][key] * dicts[1][key]
         return running_sum
 
-    def compute_gram_matrix(
+    def compute_matrix(
         self, X: List[nx.Graph], Y: Union[List[nx.Graph], None] = None
     ) -> np.ndarray:
         """Computes the Gram matrix of the Weisfeiler-Lehman kernel.
@@ -261,3 +261,33 @@ class WeisfeilerLehmanKernel:
             X_diag, Y_diag = self.diagonal(X_hashed, Y_hashed, K)
             K = np.nan_to_num(np.divide(K, np.sqrt(np.outer(X_diag, Y_diag))))
         return K
+
+    def compute_gram_matrix(
+        self, X: List[nx.Graph], Y: Union[List[nx.Graph], None] = None
+    ) -> np.ndarray:
+        """Computes the Gram matrix of the Weisfeiler-Lehman kernel.
+        If X == Y, then this is equivalent to calling compute_matrix. If X != Y, however, the self-similarity matrices of X and Y will be added in the upper-left and lower-right quadrants of the matrix, respectively, to ensure the output is actually a gram matrix.
+
+        Args:
+            X (List[nx.Graph]): set of data used for the kernel
+            Y (Union[List[nx.Graph], None], optional): set of data used for the other kernel. Defaults to None.
+
+        Returns:
+            np.ndarray: Gram matrix
+        """
+        if Y is None:
+            Y = X  # pragma: no cover
+        if X == Y:
+            return self.compute_matrix(X)
+        else:
+            K_XY = self.compute_matrix(X, Y)
+            K_XX = self.compute_matrix(X)
+            K_YY = self.compute_matrix(Y)
+            full_K = np.zeros(
+                (K_XX.shape[0] + K_YY.shape[0], K_XX.shape[0] + K_YY.shape[0])
+            )
+            full_K[: K_XX.shape[0], : K_XX.shape[0]] = K_XX
+            full_K[K_XX.shape[0] :, K_XX.shape[0] :] = K_YY
+            full_K[: K_XX.shape[0], K_XX.shape[0] :] = K_XY
+            full_K[K_XX.shape[0] :, : K_XX.shape[0]] = K_XY.T
+            return full_K
